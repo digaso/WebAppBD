@@ -19,4 +19,6 @@ You can use this console coommand to install the packages:
 ### Setup the environment variables
 
 This project is using environment variables and there is as **.example.env** file to you to edit.
+`DB="PROJETO" USER="USER" PASSWORD="PASSWORD" HOST="127.0.0.1" PORT=3306 CHARSET="utf8"`
+
 To use your own values, rename the **.example.env** to **.env**. After that change the values **USER** and **PASSWORD** to work properly. You can also change the other values as you like but usually you don't need to change.

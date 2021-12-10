@@ -1,18 +1,13 @@
 import logging
+from dotenv import dotenv_values
 import pymysql
 import re
 import subprocess
 
 # Change this if necessary
-CONFIG = {
-    'DB': 'PROJETO',
-    'USER': 'digaso',
-    'PASSWORD': '12345',
-    'HOST': '127.0.0.1',
-    'PORT': 3306,
-    'CHARSET': 'utf8'
-}
 
+CONFIG = dotenv_values(".env")
+CONFIG['PORT'] = int(CONFIG['PORT'])
 global DB
 DB = None
 
