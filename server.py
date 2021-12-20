@@ -1,13 +1,10 @@
-from flask import Flask
+import logging
+from app import app
+import db
 
-app = Flask(__name__)
-
-
-@app.route('/')
-def hello():
-    return '<h1>Hello World!</h1>'
-
-
-@app.route('/user')
-def user():
-    return '<h1>User Page</h1>'
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    db.connect()
+    app.run(host='0.0.0.0', port=9001)
