@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block content %}
+<div class="head-container">
+
+    <h1>{{ table }}</h1>
+    <div class="head-subcontainer">
+        <span>Data in table {{ table }}</span><br />
+        <a href=/tables/{{table}} > Back to Description</a>
+    </div>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th >Button</th>
+            {% for column in fields %}
+            <th>{{ column }}</th>
+            {% endfor %}
+        </tr>
+    {% for x in data %}
+    <tr>
+        <td ><a class="button" href="/tables/{{table}}/data/{{x[fields[0]]}}"> View </a></td>
+        {% for column in fields %}
+        <td class="data">{{x[column]}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+
