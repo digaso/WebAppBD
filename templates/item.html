@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block content %}
+<div class="head-container">
+    <h1>Item in {{table}}</h1>
+    <div class="head-subcontainer">
+        <span>Item with the following values</span>
+        <a href="/tables/{{table}}/data">Back to table</a>
+    </div>
+</div>
+<div class="container">
+    {% for x in fields %}
+    <div>
+        <p class="field">{{x['Field']}}:</p>
+        <span class="value">{{data[0][x['Field']]}}</span>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
