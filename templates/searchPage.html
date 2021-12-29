@@ -13,14 +13,22 @@
         <tr>
             <th >Button</th>
             {% for column in fields %}
+            {% if column in foreign_keys %}
+            <th><a class="foreign-key" href="/tables/{{foreign_keys_data[column]}}/data">{{column}}</a></th>
+            {% else %}
             <th>{{ column }}</th>
+            {% endif %}
             {% endfor %}
         </tr>
     {% for x in data %}
     <tr>
         <td ><a class="button" href="/tables/{{table}}/data/{{x[fields[0]]}}"> View </a></td>
         {% for column in fields %}
-        <td class="data">{{x[column]}}</td>
+        {% if column in foreign_keys %}
+        <td class="data"><a class="foreign-key" href="/tables/{{foreign_keys_data[column]}}/data/{{x[column]}}">{{x[column]}}</a></td>
+        {% else %}
+        <td class="data">{{x[column]}} </td>            
+        {% endif %}
         {% endfor %}
     </tr>
     {% endfor %}
