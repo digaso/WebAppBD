@@ -10,6 +10,10 @@
     text-align: center;
 }
 
+.foreign-key {
+    color: rgb(50, 50, 200);
+}
+
 .head-container {
     display: flex;
     flex: 100%;

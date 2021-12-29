@@ -2,17 +2,41 @@ from flask.wrappers import Request
 import db
 from flask import Flask, abort, render_template, url_for, request
 import logging
+from dotenv import dotenv_values
 logging.basicConfig(level=logging.DEBUG,
                     format=' %(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
+CONFIG = dotenv_values(".env")
+
+
+def getReferencedTable(data):
+    referencedTables = {}
+    for item in data:
+        print("ASSSSSSSSSSS", item)
+        referencedTables[item['COLUMN_NAME']] = (item['REFERENCED_TABLE_NAME'])
+    print(referencedTables, data)
+    return referencedTables
+
+
+def getForeignKeysData(table, foreign_keys):
+    if len(foreign_keys) > 0:
+        str = "' ,'".join(foreign_keys)
+        sql = "SELECT  COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM  INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA = '" + CONFIG['DB']+"' AND TABLE_NAME = '" + \
+            table + "' AND COLUMN_NAME IN ( '" + str + "')"
+        print(sql)
+        res = db.execute(sql)
+        foreign_keys_data = res.fetchall()
+        print('foreign keys', str)
+        return getReferencedTable(foreign_keys_data)
+    return 0
 
 
 def getForeignKeys(table):
     keys = []
     values = getFields(table)
     for x in range(0, len(values)):
-        if values[x]['Key'] == 'MUL':
+        if values[x]['Key'] == 'MUL' or values[x]['Key'] == 'UNI':
             keys.append(values[x]['Field'])
     return keys
 
@@ -84,18 +108,12 @@ def tableInfo(table):
 def tableData(table):
     data = {}
     foreign_keys = getForeignKeys(table)
+    foreign_keys_data = getForeignKeysData(table, foreign_keys)
     primary_keys = getPrimaryKeys(table)
     data = getData(table)
     obj = data[0]
     fields = list(obj.keys())
-    if len(foreign_keys) > 0:
-        sql = "SELECT CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM  INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA = 'PROJETO' AND TABLE_NAME = '" + \
-            table + "' AND COLUMN_NAME = '" + foreign_keys[0] + "'"
-
-    res = db.execute(sql)
-    foreign_keys_data = res.fetchall()
-    return render_template('table.html', table=table, data=data, fields=fields, primary_keys=primary_keys)
-    # TODO: redirect to the referenced table with <a> tags to the data page
+    return render_template('table.html', table=table, data=data, fields=fields, primary_keys=primary_keys, foreign_keys=foreign_keys, foreign_keys_data=foreign_keys_data)
 
 
 @app.route('/tables/<table>/data/<id>')
@@ -110,7 +128,8 @@ def tableDataId(table, id):
 
 @app.route('/tables/<table>/data/search', methods=['POST'])
 def handleSearch(table):
-
+    foreign_keys = getForeignKeys(table)
+    foreign_keys_data = getForeignKeysData(table, foreign_keys)
     fields = getFields(table)
     fieldSearch = request.form['fieldSearch']
     valueSearch = request.form['valueSearch']
@@ -126,4 +145,4 @@ def handleSearch(table):
     data = res.fetchall()
     if(len(data) > 0):
         fields = list(data[0].keys())
-    return render_template('searchPage.html', table=table, data=data, fields=fields)
+    return render_template('searchPage.html', table=table, data=data, fields=fields, foreign_keys=foreign_keys, foreign_keys_data=foreign_keys_data)
