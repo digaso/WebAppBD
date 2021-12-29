@@ -1,9 +1,8 @@
 {% extends 'base.html' %} {% block content %}
-<div class="head-container">
+<div class="item-head">
     <h1>Item in {{table}}</h1>
-    <div class="head-subcontainer">
+    <div class="subItem-head">
         <span>Item with the following values</span>
-        <a href="/tables/{{table}}/data">Back to table</a>
     </div>
 </div>
 <div class="container">
@@ -14,4 +13,5 @@
     </div>
     {% endfor %}
 </div>
+<a href="/tables/{{table}}/data">Back to table</a>
 {% endblock %}

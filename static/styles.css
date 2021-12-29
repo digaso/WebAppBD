@@ -2,11 +2,20 @@
     font-family: "Open Sans", sans-serif;
 }
 
+.no-results {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: rgb(97, 32, 32);
+    margin: auto;
+    text-align: center;
+}
+
 .head-container {
     display: flex;
     flex: 100%;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 1%;
 }
 
 .head-subcontainer {
@@ -14,8 +23,23 @@
     flex: 50%;
     flex-direction: column;
     align-items: center;
+    margin: 10px;
 }
 
+.item-head {
+    display: flex;
+    flex: 100%;
+    flex-direction: column;
+    align-items: left;
+    margin-bottom: 1%;
+}
+
+.subItem-head {
+    display: flex;
+    flex: 50%;
+    flex-direction: column;
+    align-items: left;
+}
 table {
     margin: auto;
     padding-left: 5%;
@@ -27,6 +51,7 @@ table {
     flex: 100%;
     flex-direction: column;
     align-items: left;
+    margin-bottom: 20px;
 }
 
 .field {

@@ -3,21 +3,11 @@
 
     <h1>{{ table }}</h1>
     <div class="head-subcontainer">
-        <span>Data in table {{ table }}</span><br />
-        <a href=/tables/{{table}} > Back to Description</a>
+        <span>Search result in {{ table }}</span><br />
+        <a href=/tables/{{table}}/data > Back to table</a>
     </div>
-    <form action="{{url_for('handleSearch', table=table)}}" method="post">
-        <label for="fieldSearch">Choose a field:</label>
-        <select name="fieldSearch">
-            {% for x in fields %}
-            <option value="{{x}}">{{x}}</option>
-            {% endfor %}
-
-        </select>
-        <input name="valueSearch" placeholder="Search ..."/>
-        <input type="submit"></button>
-    </form>
 </div>
+{% if data %}
 <table>
     <thead>
         <tr>
@@ -35,5 +25,7 @@
     </tr>
     {% endfor %}
 </table>
+{% else %}
+<p class="no-results">No results found</p>
+{% endif %}
 {% endblock %}
-
