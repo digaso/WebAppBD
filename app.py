@@ -2,12 +2,28 @@ from flask.wrappers import Request
 import db
 from flask import Flask, abort, render_template, url_for, request
 import logging
+from glob import glob
+from pprint import pprint
 from dotenv import dotenv_values
 logging.basicConfig(level=logging.DEBUG,
                     format=' %(asctime)s - %(levelname)s - %(message)s')
 
 app = Flask(__name__)
 CONFIG = dotenv_values(".env")
+
+
+def getSQLFiles():
+    sql_files = glob('sql/*.sql')
+    return sql_files
+
+
+def queryFromFile(sql_file):
+    res = []
+    with open(sql_file, 'r') as input_stream:
+        sql = input_stream.read()
+        res = db.execute(sql)
+
+    return {'data': res.fetchall(), 'sql': sql}
 
 
 def getReferencedTable(data):
@@ -84,7 +100,6 @@ def getTables(values):
 
 
 @ app.route('/')
-@ app.route('/tables')
 def tablespage():
     values = {}
     res = db.execute('show Tables')
@@ -137,12 +152,31 @@ def handleSearch(table):
     fieldType = list(
         filter(lambda field: field['Field'] == fieldSearch, fields))[0]['Type']
     if fieldType == 'int':
-        res = db.execute('select * from ' + table +
-                         ' where ' + fieldSearch + ' = ' + valueSearch)
+        if valueSearch.isnumeric() == False:
+            return render_template('error.html', error='Error: Value must be a number', table=table)
+        else:
+            res = db.execute('select * from ' + table +
+                             ' where ' + fieldSearch + ' = ' + valueSearch)
     else:
+        valueSearch = "%" + valueSearch + "%"
         res = db.execute('select * from ' + table +
-                         ' where ' + fieldSearch + ' = %s;', valueSearch)
+                         ' where ' + fieldSearch + ' like  %s;', valueSearch)
     data = res.fetchall()
     if(len(data) > 0):
         fields = list(data[0].keys())
     return render_template('searchPage.html', table=table, data=data, fields=fields, foreign_keys=foreign_keys, foreign_keys_data=foreign_keys_data)
+
+
+@app.route('/queries')
+def queryPage():
+    queries = getSQLFiles()
+    return render_template('queriesPage.html', number=len(queries), queries=queries)
+
+
+@app.route('/queries/<query_number>')
+def query(query_number):
+    sql_file = getSQLFiles()[int(query_number)-1]
+    res = queryFromFile(sql_file)
+    pprint(res)
+    fields = list(res['data'][0].keys())
+    return render_template('query.html', data=res['data'], fields=fields, command=res['sql'])

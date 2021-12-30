@@ -4,7 +4,6 @@ import pymysql
 import re
 import subprocess
 
-# Change this if necessary
 
 CONFIG = dotenv_values(".env")
 CONFIG['PORT'] = int(CONFIG['PORT'])
@@ -46,7 +45,7 @@ def rollback():
 
 
 def init():
-    sql_file = 'sql/db.sql'
+    sql_file = 'db.sql'
     command = 'mysql -v -u{} -p{} --execute="source {};" --host={} --port={} {}'.format(
         CONFIG['USER'],
         CONFIG['PASSWORD'],
