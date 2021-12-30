@@ -150,7 +150,7 @@ def handleSearch(table):
         filter(lambda field: field['Field'] == fieldSearch, fields))[0]['Type']
     if fieldType == 'int':
         if valueSearch.isnumeric() == False:
-            return render_template('error.html', error='Error: Value must be a number', table=table)
+            return render_template('error.html', error ='Error: Value must be a number', table=table)
         else:
             res = db.execute('select * from ' + table +
                              ' where ' + fieldSearch + ' = ' + valueSearch)
@@ -174,5 +174,5 @@ def queryPage():
 def query(query_number):
     sql_file = getSQLFiles()[int(query_number)-1]
     res = queryFromFile(sql_file)
-    fields = list(res['data'][0].keys())
+        fields = list(res['data'][0].keys())
     return render_template('query.html', data=res['data'], fields=fields, command=res['sql'])
