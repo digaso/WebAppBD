@@ -7,7 +7,7 @@
         <a href=/tables/{{table}} > Back to Description</a>
     </div>
     <form action="{{url_for('handleSearch', table=table)}}" method="post">
-        <label for="fieldSearch">Choose a field:</label>
+        <label for="fieldSearch">Choose a field to search for:</label>
         <select name="fieldSearch">
             {% for x in fields %}
             <option value="{{x}}">{{x}}</option>
