@@ -3,7 +3,6 @@ import db
 from flask import Flask, abort, render_template, url_for, request
 import logging
 from glob import glob
-from pprint import pprint
 from dotenv import dotenv_values
 logging.basicConfig(level=logging.DEBUG,
                     format=' %(asctime)s - %(levelname)s - %(message)s')
@@ -29,9 +28,7 @@ def queryFromFile(sql_file):
 def getReferencedTable(data):
     referencedTables = {}
     for item in data:
-        print("ASSSSSSSSSSS", item)
         referencedTables[item['COLUMN_NAME']] = (item['REFERENCED_TABLE_NAME'])
-    print(referencedTables, data)
     return referencedTables
 
 
@@ -40,10 +37,8 @@ def getForeignKeysData(table, foreign_keys):
         str = "' ,'".join(foreign_keys)
         sql = "SELECT  COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM  INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA = '" + CONFIG['DB']+"' AND TABLE_NAME = '" + \
             table + "' AND COLUMN_NAME IN ( '" + str + "')"
-        print(sql)
         res = db.execute(sql)
         foreign_keys_data = res.fetchall()
-        print('foreign keys', str)
         return getReferencedTable(foreign_keys_data)
     return 0
 
@@ -179,6 +174,5 @@ def queryPage():
 def query(query_number):
     sql_file = getSQLFiles()[int(query_number)-1]
     res = queryFromFile(sql_file)
-    pprint(res)
     fields = list(res['data'][0].keys())
     return render_template('query.html', data=res['data'], fields=fields, command=res['sql'])
