@@ -1,8 +1,9 @@
 {% extends 'base.html' %} {% block content %}
-<h1>{{ title }}</h1>
+<h1 class="title">{{ title }}</h1>
 <ul>
     {% for x in tables %}
-    <li><a href="/tables/{{x}}">{{ x }}</a></li>
+    <li><a class="table-option" href="/tables/{{x}}">{{ x }}</a></li>
     {% endfor %}
 </ul>
+<a class="query-option" href="/queries">See preset Queries</a>
 {% endblock %}

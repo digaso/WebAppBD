@@ -1,27 +1,16 @@
 {% extends 'base.html' %} {% block content %}
 <div class="head-container">
 
-    <h1>{{ table }}</h1>
+    <h1>Result of  query </h1>
     <div class="head-subcontainer">
-        <span>{{length}} rows in table {{ table }} </span><br />
-        <a href=/tables/{{table}} > Back to Description</a>
-    </div>
-    <form action="{{url_for('handleSearch', table=table)}}" method="post">
-        <label for="fieldSearch">Choose a field:</label>
-        <select name="fieldSearch">
-            {% for x in fields %}
-            <option value="{{x}}">{{x}}</option>
-            {% endfor %}
 
-        </select>
-        <input name="valueSearch" placeholder="Search ..."/>
-        <input type="submit"></button>
-    </form>
+        <span class="query">{{command}}</span><br />
+        <a href=/queries > Back to queries</a>
+    </div>
 </div>
 <table>
     <thead>
         <tr>
-            <th >Button</th>
             {% for column in fields %}
             {% if column in foreign_keys %}
             <th><a class="foreign-key" href="/tables/{{foreign_keys_data[column]}}/data">{{column}}</a></th>
@@ -32,7 +21,6 @@
         </tr>
     {% for x in data %}
     <tr>
-        <td ><a class="button" href="/tables/{{table}}/data/{{x[fields[0]]}}"> View </a></td>
         {% for column in fields %}
         {% if column in foreign_keys %}
         <td class="data"><a class="foreign-key" href="/tables/{{foreign_keys_data[column]}}/data/{{x[column]}}">{{x[column]}}</a></td>

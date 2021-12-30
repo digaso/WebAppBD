@@ -1,0 +1,11 @@
+{% extends 'base.html' %} {% block content %}
+<h1 class="title">Page with {{number}} querys</h1>
+<ul>
+    {% for query in queries %}
+    <li>
+        <a class="table-option" href="/queries/{{loop.index}}"> {{ query }} </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

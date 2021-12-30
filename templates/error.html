@@ -1,0 +1,7 @@
+{% extends 'base.html' %} {% block content %}
+<div class="error-container">
+    <h1 class="error">{{ error }}</h1>
+
+    <a href="/tables/{{table}}/data">Go back</a>
+</div>
+{% endblock %}

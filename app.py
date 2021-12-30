@@ -51,9 +51,11 @@ def getForeignKeysData(table, foreign_keys):
 def getForeignKeys(table):
     keys = []
     values = getFields(table)
-    for x in range(0, len(values)):
-        if values[x]['Key'] == 'MUL' or values[x]['Key'] == 'UNI':
-            keys.append(values[x]['Field'])
+    res = db.execute("select COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE where REFERENCED_TABLE_SCHEMA = '" +
+                     CONFIG['DB']+"' AND TABLE_NAME = '" + table + "' and REFERENCED_TABLE_NAME is not null")
+    foreign_keys = res.fetchall()
+    for x in range(0, len(foreign_keys)):
+        keys.append(foreign_keys[x]['COLUMN_NAME'])
     return keys
 
 
@@ -128,7 +130,7 @@ def tableData(table):
     data = getData(table)
     obj = data[0]
     fields = list(obj.keys())
-    return render_template('table.html', table=table, data=data, fields=fields, primary_keys=primary_keys, foreign_keys=foreign_keys, foreign_keys_data=foreign_keys_data)
+    return render_template('table.html', table=table, data=data, length=len(data), fields=fields, primary_keys=primary_keys, foreign_keys=foreign_keys, foreign_keys_data=foreign_keys_data)
 
 
 @app.route('/tables/<table>/data/<id>')
